@@ -17,7 +17,6 @@
 
 <body>
     <main>
-
         <section class="vh-100" style="background-color: #eee;">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -27,20 +26,13 @@
 
                                 <h4 class="text-center my-3 pb-3">To Do App</h4>
 
-                                <form
+                                <form action="/store" method="post"
                                     class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
-                                    <div class="col-12">
-
-                                        <div class="form-outline">
-
-                                            <input type="text" id="1" class="form-control "
-                                                placeholder="Enter a task here" />
-                                        </div>
+                                    @csrf
+                                    <div class="form-outline">
+                                        <input type="text" name="title" class="form-control" />
                                     </div>
-
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
+                                    <input type="submit" value="Create" class="btn btn-primary" />
                                 </form>
 
                                 <table class="table mb-4">
@@ -49,37 +41,37 @@
                                             <th scope="col">No.</th>
                                             <th scope="col">Todo item</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col ">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($todos as $todo)
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Buy groceries for next week</td>
-                                            <td>In progress</td>
+                                            <th scope="row"> {{ $loop->index +1 }}</th>
+                                            @if($todo->completed)
+                                            <td style="text-decoration-line: line-through">{{ $todo->title }}</td>
+                                            @else
+                                            <td> {{$todo->title}}</td>
+                                            @endif
+
+                                            @if ($todo->completed)
+                                            <td class="bg-success">Completed</td>
+                                            @else
+                                            <td class="bg-warning">In progress</td>
+                                            @endif
                                             <td>
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                                <button type="submit" class="btn btn-success ms-1">Finished</button>
+                                                {{-- <a href="{{asset('/' . $todo->id . '/edit')}}">Edit</a> --}}
+                                                <button type="submit" class="btn btn-info">Edit</button>
+                                                <a href="{{asset('/' . $todo->id . '/delete')}}"> <button type="submit"
+                                                        class="btn btn-danger">Delete</button></a>
+
+                                                <a href="{{asset('/' . $todo->id . '/completed')}}"> <button
+                                                        type="submit" class="btn btn-success ms-1">Finished</button></a>
+
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Renew car insurance</td>
-                                            <td>In progress</td>
-                                            <td>
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                                <button type="submit" class="btn btn-success ms-1">Finished</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Sign up for online course</td>
-                                            <td>In progress</td>
-                                            <td>
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                                <button type="submit" class="btn btn-success ms-1">Finished</button>
-                                            </td>
-                                        </tr>
+                                        @endforeach
+
                                     </tbody>
                                 </table>
 

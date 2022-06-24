@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TodoList;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class TodoListController extends Controller
 {
@@ -12,10 +13,13 @@ class TodoListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+   
     public function index()
     {
-        return view('index');
+        $todos = TodoList::orderBy('completed')->get();
+        return view('index', compact('todos'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -35,8 +39,14 @@ class TodoListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255'
+        ]);
+        $todo = $request->title;
+        TodoList::create(['title' => $todo]);
+        return redirect()->back()->with('success', "TODO created successfully!");
     }
+
 
     /**
      * Display the specified resource.
@@ -55,9 +65,11 @@ class TodoListController extends Controller
      * @param  \App\Models\TodoList  $todoList
      * @return \Illuminate\Http\Response
      */
-    public function edit(TodoList $todoList)
+   
+    public function edit($id)
     {
-        //
+        $todo = TodoList::find($id);
+        return view('todo.edit')->with(['id' => $id, 'todo' => $todo]);
     }
 
     /**
@@ -67,19 +79,39 @@ class TodoListController extends Controller
      * @param  \App\Models\TodoList  $todoList
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TodoList $todoList)
-    {
-        //
-    }
 
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|max:255'
+        ]);
+        $updateTodo = TodoList::find($request->id);
+        $updateTodo->update(['title' => $request->title]);
+        return redirect('/index')->with('success', "TODO updated successfully!");
+    }
+    public function completed($id)
+    {
+        $todo = TodoList::find($id);
+        if ($todo->completed) {
+            $todo->update(['completed' => false]);
+            return redirect()->back()->with('failed', "TODO marked as incomplete!");
+        } else {
+            $todo->update(['completed' => true]);
+            return redirect()->back()->with('success', "TODO marked as complete!");
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\TodoList  $todoList
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TodoList $todoList)
+ 
+    public function delete($id)
     {
-        //
+        $todo = TodoList::find($id);
+        $todo->delete();
+        return redirect()->back()->with('success', "TODO deleted successfully!");
     }
 }
