@@ -23,8 +23,12 @@
                     <div class="col col-lg-9 col-xl-7">
                         <div class="card rounded-3">
                             <div class="card-body p-4">
-
-                                <h4 class="text-center my-3 pb-3">To Do App</h4>
+                                <h4 class="text-center my-3 pb-3">Todo List</h4>
+                                @if (session('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                                @endif
 
                                 <form action="/store" method="post"
                                     class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
@@ -60,13 +64,22 @@
                                             <td class="bg-warning">In progress</td>
                                             @endif
                                             <td>
-                                                {{-- <a href="{{asset('/' . $todo->id . '/edit')}}">Edit</a> --}}
-                                                <button type="submit" class="btn btn-info">Edit</button>
-                                                <a href="{{asset('/' . $todo->id . '/delete')}}"> <button type="submit"
-                                                        class="btn btn-danger">Delete</button></a>
+                                                <a href="{{asset('/' . $todo->id . '/edit')}}"> <button type="submit"
+                                                        class="btn btn-info">Edit</button></a>
 
+                                                <a href="{{asset('/' . $todo->id . '/delete')}}"
+                                                    onclick="return confirm('Are you sure you delete this Todo???')">
+                                                    <button type="submit" class="btn btn-danger">Delete</button></a>
+                                                @if ($todo->completed)
+                                                <a href="{{asset('/' . $todo->id . '/completed')}}"> <button
+                                                        type="submit"
+                                                        class="btn btn-success ms-1">Unfinished</button></a>
+
+                                                @else
                                                 <a href="{{asset('/' . $todo->id . '/completed')}}"> <button
                                                         type="submit" class="btn btn-success ms-1">Finished</button></a>
+
+                                                @endif
 
                                             </td>
                                         </tr>

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('', [TodoListController::class, 'index']);
 Route::post('/store', [TodoListController::class, 'store']);
 Route::get('/{id}/edit', [TodoListController::class, 'edit']);
-Route::patch('/update', [TodoListController::class, 'update']);
+// Route::patch('/update', [TodoListController::class, 'update']);
 Route::get('/{id}/completed', [TodoListController::class, 'completed']);
 Route::get('/{id}/delete', [TodoListController::class, 'delete']);
+Route::patch('/update', [TodoListController::class, 'update']);

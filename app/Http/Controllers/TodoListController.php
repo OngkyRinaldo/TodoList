@@ -69,18 +69,19 @@ class TodoListController extends Controller
     public function edit($id)
     {
         $todo = TodoList::find($id);
-        return view('todo.edit')->with(['id' => $id, 'todo' => $todo]);
+        return view('edit')->with(['id' => $id, 'todo' => $todo]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TodoList  $todoList
-     * @return \Illuminate\Http\Response
-     */
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  \App\Models\Post  $post
+    * @return \Illuminate\Http\Response
+    */
 
 
+   
     public function update(Request $request)
     {
         $request->validate([
@@ -88,14 +89,15 @@ class TodoListController extends Controller
         ]);
         $updateTodo = TodoList::find($request->id);
         $updateTodo->update(['title' => $request->title]);
-        return redirect('/index')->with('success', "TODO updated successfully!");
+        return redirect('')->with('success', "TODO updated successfully!");
     }
+
     public function completed($id)
     {
         $todo = TodoList::find($id);
         if ($todo->completed) {
             $todo->update(['completed' => false]);
-            return redirect()->back()->with('failed', "TODO marked as incomplete!");
+            return redirect()->back()->with('success', "TODO marked as incomplete!");
         } else {
             $todo->update(['completed' => true]);
             return redirect()->back()->with('success', "TODO marked as complete!");
